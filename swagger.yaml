@@ -72,26 +72,7 @@ paths:
             $ref: '#/definitions/Product'
         404:
           description: Not Found. Product not available.
-
-  /api/products/search:
-    get:
-      summary: Search for products
-      parameters:
-        - name: q
-          in: query
-          type: string
-          required: true
-          description: Search query
-      responses:
-        200:
-          description: Returns a list of products matching the search query
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Product'
-        404:
-          description: Not Found. No products found for the search query.
-
+          
   /api/products/add:
     post:
       summary: Add a new product
