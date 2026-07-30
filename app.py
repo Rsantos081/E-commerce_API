@@ -3,9 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import selectinload
 from flasgger import Swagger
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "minha@#$123" 
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
 swagger = Swagger(app, template_file="swagger.yaml")
 
@@ -170,4 +173,3 @@ def checkout():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
