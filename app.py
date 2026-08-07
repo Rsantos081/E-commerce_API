@@ -54,7 +54,7 @@ def Login():
 @login_required
 def logout():
     logout_user()
-    return jsonify({"mensagem":"Login Realizado Com Sucesso"}), 200
+    return jsonify({"mensagem":"Logout Realizado Com Sucesso"}), 200
  
 
 @app.route('/api/products/add',methods=["POST"])
