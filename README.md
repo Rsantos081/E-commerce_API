@@ -141,10 +141,5 @@ As rotas podem ser testadas utilizando:
 
 Este projeto foi desenvolvido com fins de aprendizado para praticar conceitos de desenvolvimento Backend utilizando Python e Flask, simulando operações essenciais de um sistema de e-commerce.
 
-## 👨‍💻 Autor
 
-Ruan Thomaz de Freitas Santos
 
-GitHub: https://github.com/Rsantos081
-
-LinkedIn: https://www.linkedin.com/in/ruan-thomaz7889/
