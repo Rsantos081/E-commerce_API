@@ -9,7 +9,7 @@ schemes:
 
 paths:
 
-  /login:
+  /api/login:
     post:
       summary: Log in
       parameters:
@@ -34,7 +34,7 @@ paths:
         401:
           description: Unauthorized. Invalid credentials
 
-  /logout:
+  /api/logout:
     post:
       summary: Log out
       responses:
@@ -42,6 +42,26 @@ paths:
           description: Logout successfully
         401:
           description: Unauthorized. Invalid credentials
+
+  /api/register:
+    post:
+      summary: Register a new user
+      parameters:
+        - nome: body
+          in: body
+          required: true
+          schema:
+            type: object
+            propertias:
+            nome:
+              type: string
+            senha:
+              type: string
+      responses:
+        200:
+          description: Registration successfully completed.
+        409:
+          description: Unauthorized. User already exists.
   
   /api/products:
     get:
