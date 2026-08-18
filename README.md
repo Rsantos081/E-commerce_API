@@ -1,6 +1,6 @@
 # 🛒 E-commerce API
 
-API REST desenvolvida em Python utilizando Flask para simular funcionalidades básicas de um sistema de e-commerce.
+API REST desenvolvida em Python utilizando Flask para simular funcionalidades de um sistema de e-commerce.
 
 O projeto implementa autenticação de usuários, gerenciamento de produtos e operações de carrinho de compras, aplicando conceitos fundamentais de desenvolvimento Backend, bancos de dados relacionais e APIs REST.
 
@@ -11,7 +11,6 @@ O projeto implementa autenticação de usuários, gerenciamento de produtos e op
 * Flask-SQLAlchemy
 * Flask-Login
 * SQLite
-* Swagger (Flasgger)
 * SQLAlchemy
 * Postman
 * Dotenv
@@ -22,6 +21,7 @@ O projeto implementa autenticação de usuários, gerenciamento de produtos e op
 
 * Login de usuários
 * Logout de usuários
+* Cadastro de novos usuários
 * Controle de acesso utilizando Flask-Login
 * Proteção de rotas através de `@login_required`
 
@@ -38,22 +38,63 @@ O projeto implementa autenticação de usuários, gerenciamento de produtos e op
 * Adicionar item ao carrinho
 * Remover item do carrinho
 * Visualizar carrinho
-* Finalizar compra
+* Finalizar compra (checkout)
 * Limpar carrinho após checkout
 
 ## 🗂 Estrutura do Projeto
 
 ```text
-E-commerce_API/
+e-commerce_API-main/
 │
-├── app.py
-├── swagger.yaml
+├── run.py                   # Ponto de entrada da aplicação
+├── swagger.yaml              # Especificação da API (referência estática)
 ├── requirements.txt
-├── .env
+├── .env                      # Não versionado (você precisa criar)
 ├── instance/
 │   └── ecommerce.db
+├── app/
+│   ├── __init__.py           # create_app(): configuração e registro dos blueprints
+│   ├── extensions.py         # Instâncias do SQLAlchemy e do LoginManager
+│   ├── models.py             # Usuario, Produto, ItemCarrinho
+│   ├── auth/
+│   │   ├── __init__.py       # Blueprint 'auth' (prefixo /api)
+│   │   └── routes.py         # login, logout, register
+│   └── src/
+│       ├── __init__.py       # Blueprints 'products' (/api/products) e 'cart' (/cart)
+│       └── routes.py         # Rotas de produtos e carrinho
 └── README.md
 ```
+
+## 🔌 Endpoints Disponíveis
+
+### Autenticação (`/api`)
+
+| Método | Rota            | Descrição                    | Autenticação |
+|--------|-----------------|-------------------------------|--------------|
+| POST   | `/api/login`    | Login do usuário              | -            |
+| POST   | `/api/logout`   | Logout do usuário             | -            |
+| POST   | `/api/register` | Cadastro de novo usuário      | -            |
+
+### Produtos (`/api/products`)
+
+| Método | Rota                            | Descrição                     | Autenticação      |
+|--------|----------------------------------|--------------------------------|--------------------|
+| GET    | `/api/products/`                | Lista todos os produtos        | -                  |
+| GET    | `/api/products/<product_id>`    | Busca produto por ID           | -                  |
+| POST   | `/api/products/add`             | Adiciona um novo produto       | `@login_required`  |
+| PUT    | `/api/products/update/<product_id>` | Atualiza um produto        | `@login_required`  |
+| DELETE | `/api/products/delete/<product_id>` | Remove um produto          | `@login_required`  |
+
+### Carrinho de Compras (`/cart`)
+
+| Método | Rota                        | Descrição                          | Autenticação      |
+|--------|------------------------------|-------------------------------------|--------------------|
+| GET    | `/cart/`                    | Visualiza o carrinho do usuário     | `@login_required`  |
+| POST   | `/cart/add/<product_id>`    | Adiciona item ao carrinho           | `@login_required`  |
+| DELETE | `/cart/remove/<product_id>` | Remove item do carrinho             | `@login_required`  |
+| POST   | `/cart/checkout`            | Finaliza a compra e esvazia o carrinho | `@login_required` |
+
+> ⚠️ As rotas protegidas com `@login_required` exigem que o usuário esteja autenticado via `/api/login` (o Flask-Login mantém a sessão via cookie).
 
 ## ⚙️ Instalação
 
@@ -89,7 +130,7 @@ Instale as dependências:
 pip install -r requirements.txt
 ```
 
-Crie um arquivo `.env`:
+Crie um arquivo `.env` na raiz do projeto:
 
 ```env
 SECRET_KEY=sua_chave_secreta
@@ -98,26 +139,43 @@ SECRET_KEY=sua_chave_secreta
 Execute a aplicação:
 
 ```bash
-python app.py
+python run.py
 ```
 
-## 📚 Documentação Swagger
+Por padrão, a API sobe em `http://127.0.0.1:5000`.
 
-Após iniciar a aplicação, a documentação estará disponível em:
+## 📚 Documentação da API
 
-```text
-http://127.0.0.1:5000/apidocs
-```
+A especificação da API está descrita no arquivo [`swagger.yaml`](./swagger.yaml), no formato Swagger 2.0.
+
+> ℹ️ Atualmente esse arquivo é uma referência estática (as rotas e schemas são documentados manualmente). Para visualizá-lo interativamente, você pode colar o conteúdo em um editor online como o [Swagger Editor](https://editor.swagger.io/), ou importar no Postman.
 
 ## 🧪 Testes
 
 As rotas podem ser testadas utilizando:
 
 * Postman
-* Swagger UI
+* Swagger Editor (a partir do `swagger.yaml`)
 
-## Exemplo de Produto
+## Exemplo de Requisições
 
+**Registro de usuário** — `POST /api/register`
+```json
+{
+    "nome": "usuario_teste",
+    "senha": "senha123"
+}
+```
+
+**Login** — `POST /api/login`
+```json
+{
+    "nome": "usuario_teste",
+    "senha": "senha123"
+}
+```
+
+**Adicionar produto** — `POST /api/products/add`
 ```json
 {
     "nome": "Notebook Gamer",
@@ -134,12 +192,9 @@ As rotas podem ser testadas utilizando:
 * Autenticação e autorização
 * Sessões de usuário
 * Persistência de dados
-* Documentação de APIs
+* Organização com Blueprints e Application Factory (`create_app()`)
 * Boas práticas de organização Backend
 
 ## 🎯 Objetivo
 
 Este projeto foi desenvolvido com fins de aprendizado para praticar conceitos de desenvolvimento Backend utilizando Python e Flask, simulando operações essenciais de um sistema de e-commerce.
-
-
-
