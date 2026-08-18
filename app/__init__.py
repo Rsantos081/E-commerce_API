@@ -21,9 +21,11 @@ def create_app():
     
     from app.auth import auth_bp
     from app.src import produtos_bp
+    from app.src import cart_bp
     
     app.register_blueprint(auth_bp)
     app.register_blueprint(produtos_bp)
+    app.register_blueprint(cart_bp)
     
     with app.app_context():
         db.create_all()

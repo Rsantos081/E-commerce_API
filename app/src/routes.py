@@ -2,11 +2,12 @@ from flask import request, jsonify
 from flask_login import login_required, current_user
 
 from app.src import produtos_bp
+from app.src import cart_bp
 from app.extensions import db
 from app.models import Produto, ItemCarrinho, Usuario
 
 
-@produtos_bp.route('/api/products/add', methods=["POST"])
+@produtos_bp.route('/add', methods=["POST"])
 @login_required
 def add_produto():
     data = request.json 
@@ -17,7 +18,7 @@ def add_produto():
         return jsonify({"mensagem":"Produto Adicionado com Sucesso"}), 200
     return jsonify({"mensagem":"Dados do Produto Inválido"}), 400
 
-@produtos_bp.route('/api/products/delete/<int:product_id>', methods=["DELETE"])
+@produtos_bp.route('/delete/<int:product_id>', methods=["DELETE"])
 @login_required
 def delete_produto(product_id):
     product  = Produto.query.get(product_id)
@@ -27,7 +28,7 @@ def delete_produto(product_id):
         return jsonify ({"mensagem": "Produto Deletado com Sucesso"}), 200
     return jsonify ({"mensagem": "Produto não Encontrado"}), 400
 
-@produtos_bp.route('/api/products/<int:product_id>', methods=["GET"])
+@produtos_bp.route('/<int:product_id>', methods=["GET"])
 def get_produto(product_id):
     product = Produto.query.get(product_id)
     if product:
@@ -39,7 +40,7 @@ def get_produto(product_id):
         })
     return jsonify ({"mensagem": "Produto não Encontrado"}), 404
 
-@produtos_bp.route('/api/products/update/<int:product_id>', methods = ["PUT"])
+@produtos_bp.route('/update/<int:product_id>', methods = ["PUT"])
 @login_required
 def atualizar_produto(product_id):
     product = Produto.query.get(product_id)
@@ -57,7 +58,7 @@ def atualizar_produto(product_id):
     db.session.commit()
     return jsonify ({"mensagme": "Produto Atualizado com Sucesso"}), 200
 
-@produtos_bp.route('/api/products', methods = ["GET"])
+@produtos_bp.route('/', methods = ["GET"])
 def get_produtos():
     products = Produto.query.all() 
     products_list = []
@@ -71,7 +72,7 @@ def get_produtos():
     return jsonify(products_list)
 
 
-@produtos_bp.route('/api/cart/add/<int:product_id>', methods = ['POST'])
+@cart_bp.route('/add/<int:product_id>', methods = ['POST'])
 @login_required
 def add_carrinho(product_id):
     user = Usuario.query.get(int(current_user.id))
@@ -84,7 +85,7 @@ def add_carrinho(product_id):
         return jsonify ({"mensagem":"Item Adicionado ao Carrinho com Sucesso"}), 200
     return jsonify ({"mensagem":"Item não Encontrado Credenciais Inválidas"}), 400
 
-@produtos_bp.route('/api/cart/remove/<int:product_id>', methods = ["DELETE"])
+@cart_bp.route('/remove/<int:product_id>', methods = ["DELETE"])
 @login_required
 def delete_carrinho(product_id):
     cart_item = ItemCarrinho.query.filter_by(usuario_id=current_user.id, produto_id=product_id).first()
@@ -94,7 +95,7 @@ def delete_carrinho(product_id):
         return jsonify ({"mensagem":"Item Removido do Carrinho com Sucesso"}), 200
     return jsonify ({"mensagem": "Falha ao Remover o Item do Carrinho"}), 400
         
-@produtos_bp.route('/api/cart', methods = ["GET"])
+@cart_bp.route('/', methods = ["GET"])
 @login_required
 def visualizar_carrinho():
     user = Usuario.query.get(int(current_user.id))
@@ -110,7 +111,7 @@ def visualizar_carrinho():
             })
     return jsonify (cart_content)
 
-@produtos_bp.route ('/api/cart/checkout', methods = ["POST"])
+@cart_bp.route ('/checkout', methods = ["POST"])
 @login_required
 def checkout():
     user = Usuario.query.get(current_user.id)
