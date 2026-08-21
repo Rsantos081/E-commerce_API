@@ -1,4 +1,8 @@
 Flask==2.3.0
 Flask-SQLAlchemy==3.1.1
 Flask-Login==0.6.2
+<<<<<<< HEAD
 Werkzeug==2.3.0
+=======
+Werkzeug==2.3.0
+>>>>>>> 83e09c9d110b22bfbe594bf46700216104800553
