@@ -197,4 +197,8 @@ As rotas podem ser testadas utilizando:
 
 ## 🎯 Objetivo
 
+<<<<<<< HEAD
 Este projeto foi desenvolvido com fins de aprendizado para praticar conceitos de desenvolvimento Backend utilizando Python e Flask, simulando operações essenciais de um sistema de e-commerce.
+=======
+Este projeto foi desenvolvido com fins de aprendizado para praticar conceitos de desenvolvimento Backend utilizando Python e Flask, simulando operações essenciais de um sistema de e-commerce.
+>>>>>>> 92e4197272c9af899f924f64a5e25368f7decd48
