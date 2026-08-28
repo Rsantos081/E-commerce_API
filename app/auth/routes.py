@@ -1,9 +1,16 @@
 from flask import request,jsonify
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user,current_user,login_required
 
 from app.auth import auth_bp
 from app.extensions import db
 from app.models import Usuario
+
+
+@auth_bp.route('/me', methods=["GET"])
+def me():
+    if current_user.is_authenticated:
+        return jsonify ({"autenticaçao": True, "id": current_user.id, "nome": current_user.nome}), 200
+    return jsonify ({"autenticado": False}), 200
 
 @auth_bp.route('/login', methods=["POST"])
 def Login():
